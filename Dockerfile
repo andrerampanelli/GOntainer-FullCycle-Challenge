@@ -1,10 +1,8 @@
-
-FROM golang:latest
-
-WORKDIR /app
-
+FROM golang:alpine AS builder
+WORKDIR /go/src/app
 COPY . .
+RUN go build -ldflags "-s -w" -o /app main.go
 
-RUN go build
-
-CMD ["./Full-Cycle-One"]
+FROM scratch
+COPY --from=builder /app /app
+CMD ["/app"]
